@@ -1,0 +1,3 @@
+FTP User    : admin@ecolmall.com 
+FTP URL     : ftp.ecolmall.com
+FTP Pasword : *&}V31C{Y(ZD
