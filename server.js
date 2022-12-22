@@ -7,7 +7,7 @@ const server = require("http").createServer(app);
 const io = require("socket.io")(server);
 
 server.listen(3000, () => {
-    console.log('Server started on port 3000');
+    Logger.info('Server started on port 3000');
 });
 
 app.get("/", (req, res) => {
@@ -32,19 +32,24 @@ mongoose.connect('mongodb+srv://flagtick:YvwSHeSJL0rVYpJN@cluster0.rlpe6rz.mongo
 
 const connection = mongoose.connection;
 
-connection.once("open", () => {
-
+connection.once("open", async () => {
     const messageCollectionStream = connection.collection("messages").watch();
-    messageCollectionStream.on("change", (change) => {
+    const coll = connection.collection("messages");
+    let listMessages = [];
+    messageCollectionStream.on("change", async (change) => {
         switch (change.operationType) {
           case "insert":
-            Logger.info("Successul insert data!");
-            io.of("/api/socket").emit("technical-issue", 'Your problem will be solving. Please wait for a moment!');
+            const cursor = coll.find();
+            await cursor.forEach( (cursor) => {
+                listMessages.push(cursor);
+            });
+            Logger.info(listMessages);
+            io.of("/api/socket").emit("technical-issue", listMessages);
+            listMessages = [];
             break;
           case "delete":
             break;
         }
     });
-
 });
 
