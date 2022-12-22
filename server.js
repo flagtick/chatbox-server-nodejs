@@ -1,5 +1,6 @@
 const express = require("./config/express.js"),
     mongoose = require("mongoose");
+const Logger = require('./utils/logger');
 
 const app = express.init();
 const server = require("http").createServer(app);
@@ -15,10 +16,10 @@ app.get("/", (req, res) => {
 
 /** Socket.io */
 io.of("/api/socket").on("connection", (socket) => {
-    console.log("socket.io: Connection established successfully: ", socket.id);
+    Logger.info("socket.io: Connection established successfully: ", socket.id);
   
     socket.on("disconnect", () => {
-      console.log("socket.io: Connection lose!: ", socket.id);
+        Logger.info("socket.io: Connection lose!: ", socket.id);
     });
 });
 
@@ -37,7 +38,7 @@ connection.once("open", () => {
     messageCollectionStream.on("change", (change) => {
         switch (change.operationType) {
           case "insert":
-            console.log(change.operationType);
+            Logger.info("Successul insert data!");
             io.of("/api/socket").emit("technical-issue", 'Your problem will be solving. Please wait for a moment!');
             break;
           case "delete":
