@@ -1,10 +1,23 @@
 const Message = require("../models/Message");
+const Conversation = require('../models/Conversation');
+const Logger = require("../utils/logger");
 
 const addMessage = async (req, res) => {
     try {
         const message = await Message.create({
             message: req.body.message,
             date_created: req.body.date_created
+        });
+
+
+        const UIID = 'UIID' + req.body.topic_id + req.body.person_id;
+        const conversation = await Conversation.create({
+            conversation_id: UIID,
+            topic_id: req.body.topic_id,
+            user_id: req.body.person_id,
+            staff_id: null,
+            date_modified: new Date().toISOString(),
+            date_created: req.body.date_created 
         });
 
         return res.json({
