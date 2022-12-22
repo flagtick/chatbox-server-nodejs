@@ -9,6 +9,10 @@ server.listen(3000, () => {
     console.log('Server started on port 3000');
 });
 
+app.get("/", (req, res) => {
+    res.send("<h1>Your server has start from deployment</h1>");
+});
+
 /** Socket.io */
 io.of("/api/socket").on("connection", (socket) => {
     console.log("socket.io: Connection established successfully: ", socket.id);
@@ -16,10 +20,6 @@ io.of("/api/socket").on("connection", (socket) => {
     socket.on("disconnect", () => {
       console.log("socket.io: Connection lose!: ", socket.id);
     });
-
-    // socket.on('technical-issue', (msg) => {
-    //   console.log('message: ' + msg);
-    // });
 });
 
 /** Connect MongoDB from Node.js application */
