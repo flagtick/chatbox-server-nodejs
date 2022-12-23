@@ -1,7 +1,6 @@
-const express = require("./config/express.js"),
-    mongoose = require("mongoose");
+const express = require("./config/express.js");
 const Logger = require('./utils/logger');
-
+const mongoose = require('./config/mongoose');
 const app = express.init();
 const server = require("http").createServer(app);
 const io = require("socket.io")(server);
@@ -14,6 +13,8 @@ app.get("/", (req, res) => {
     res.send("<h1>Your server has start from deployment!!</h1>");
 });
 
+app.disable('etag');
+
 /** Socket.io */
 io.of("/api/socket").on("connection", (socket) => {
     Logger.info("socket.io: Connection established successfully: ", socket.id);
@@ -23,14 +24,12 @@ io.of("/api/socket").on("connection", (socket) => {
     });
 });
 
-/** Connect MongoDB from Node.js application */
-mongoose.set('strictQuery', false);
-mongoose.connect('mongodb+srv://flagtick:YvwSHeSJL0rVYpJN@cluster0.rlpe6rz.mongodb.net/chatbox?retryWrites=true&w=majority', {
-    useNewUrlParser: true, 
-    useUnifiedTopology: true 
-});
-
 const connection = mongoose.connection;
+
+const collections = mongoose.connection.collections;
+Promise.all(Object.values(collections).map(async (collection) => {
+    await collection.deleteMany({}); 
+}));
 
 connection.once("open", async () => {
     const messageCollectionStream = connection.collection("messages").watch();

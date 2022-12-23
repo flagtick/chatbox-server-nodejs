@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 
 const ConversationSchema = new mongoose.Schema({
+    conversation_id: {
+      type: String,
+      unique: false,
+      required: true,
+    },
     topic_id: {
       type: String,
       unique: false,
