@@ -2,7 +2,7 @@ const path = require('path'),
     express = require('express'),
     morgan = require('morgan'),
     bodyParser = require('body-parser'),
-    routers = require("../routes/router"),
+    routers = require('../routes/router'),
     cors = require('cors');
 
 module.exports.init = () => {

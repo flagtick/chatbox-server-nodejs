@@ -29,8 +29,12 @@ const addMessage = async (req, res) => {
                 success: true,
                 message: "Message added successfully!",
             });
-
         }
+        
+        return res.json({
+            success: true,
+            message: "Message added successfully!",
+        });
     } catch (error) {
         Logger.error(error);
         return res.json({
