@@ -2,9 +2,25 @@ const Message = require("../models/Message");
 const Conversation = require('../models/Conversation');
 const mongoose = require('../config/mongoose');
 const Logger = require("../utils/logger");
-
+const nodemailer = require('nodemailer');
+  
 const addMessage = async (req, res) => {
     const UIID = 'UIID' + req.body.topic_id + req.body.person_id;
+
+    let transporter = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+            user: 'nguyenthanhtuanpro2k@gmail.com',
+            pass: 'lmehetwumzjutarq',
+        },
+        });
+
+  
+    const mailOptions = {
+        to: 'treynguyen2k.it@gmail.com',
+        subject: 'Sending Email using Node.js',
+        text: 'That was easy!'
+    };
     // clearCollections();
     try {
         const message = await Message.create({
@@ -24,13 +40,25 @@ const addMessage = async (req, res) => {
                 date_modified: new Date().toISOString(),
                 date_created: req.body.date_created 
             });
-
+            transporter.sendMail(mailOptions, function(error, info){
+                if (error) {
+                  console.log(error);
+                } else {
+                  console.log('Email sent: ' + info.response);
+                }
+              });
             return res.json({
                 success: true,
                 message: "Message added successfully!",
             });
         }
-        
+        transporter.sendMail(mailOptions, function(error, info){
+            if (error) {
+              console.log(error);
+            } else {
+              console.log('Email sent: ' + info.response);
+            }
+          });
         return res.json({
             success: true,
             message: "Message added successfully!",

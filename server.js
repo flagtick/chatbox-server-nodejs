@@ -3,13 +3,9 @@ const Logger = require('./utils/logger');
 const mongoose = require('./config/mongoose');
 const app = express.init();
 
-const https = require('https');
+const http = require('http');
 const fs = require('fs');
-const server = https.createServer({
-    key: fs.readFileSync('./ssl/key.pem'),
-    cert: fs.readFileSync('./ssl/cert.pem'),
-    ca: fs.readFileSync('./ssl/cert.pem')
-}, app);
+const server = http.createServer({},app);
 
 const io = require('socket.io')(server, {
     cors: {
